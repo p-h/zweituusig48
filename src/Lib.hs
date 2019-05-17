@@ -11,8 +11,10 @@ module Lib ( someFunc
            , reverseColumns
            ) where
 
-import Data.Word(Word32)
 import Data.GI.Base
+import Data.List(genericIndex)
+import Data.Tuple.Select
+import Data.Word(Word32)
 import qualified Data.Text as T
 import qualified GI.Gdk as Gdk
 import qualified GI.Gtk as Gtk
@@ -30,6 +32,9 @@ reverseColumns (r1, r2, r3, r4) = (reverse' r1, reverse' r2, reverse' r3, revers
 
 type Row a = (a, a, a, a)
 type Grid a = (Row a, Row a, Row a, Row a)
+
+initialGrid :: Grid Int
+initialGrid = ((1, 2, 3, 4), (1, 2, 3, 4), (1, 2, 3, 4), (1, 2, 3, 4))
 
 bindings =
     [ (Gdk.KEY_Up, North)
@@ -84,13 +89,24 @@ someFunc = do
             eKey <- B.fromAddHandler keyEvent
             let eDir = B.filterJust $ fmap keyCodeToDirection eKey
             let eGridChange = fmap updateGrid eDir
-            B.reactimate $ (\d -> mapM_ (\(_, label) -> set label [#label := T.pack $ show d]) labels) <$> eDir
+            eGrid <- B.accumE initialGrid eGridChange
+            B.reactimate $ (`displayGrid` labels) <$> eGrid
 
     network <- B.compile networkDescription
 
     B.actuate network
 
     Gtk.main
+
+displayGrid :: (Integral i, Num a, Show a) => Grid a -> [((i, i), Gtk.Label)] -> IO ()
+displayGrid grid = mapM_ (\((x, y), label) ->
+    let val = T.pack $ show $ gridLookup x y grid
+    in set label [#label := val])
+    where
+        selectors :: [Row a -> a]
+        selectors = [sel1, sel2, sel3, sel4]
+        gridLookup :: Integral i => i -> i -> Grid a -> a
+        gridLookup x y g = (selectors `genericIndex` x) $ (selectors `genericIndex` y) g
 
 
 updateGrid :: (Eq a, Num a) => Direction -> Grid a -> Grid a
@@ -99,7 +115,6 @@ updateGrid dir grid@(r1, r2, r3, r4) = case dir of
     South -> rotateGridRight $ updateGrid East $ rotateGridLeft grid
     West -> reverseColumns $ updateGrid East $ reverseColumns grid
     North -> reverse' $ updateGrid South $ reverse' grid
-
     where
         updateEast :: (Eq a, Num a) => Row a -> Row a
         updateEast row@(a, b, c, d)

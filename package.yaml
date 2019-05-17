@@ -21,7 +21,7 @@ dependencies:
 - haskell-gi-base
 - reactive-banana
 - text
-- time
+- tuple
 
 library:
   source-dirs: src
