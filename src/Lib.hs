@@ -107,6 +107,18 @@ updateGrid dir grid@(r1, r2, r3, r4) = case dir of
             | c /= 0 && c == d = (0, a, b, c + 1)
             | b /= 0 && b == c = (0, a, b + 1, d)
             | a /= 0 && a == b = (0, a + 1, c, d)
+            | a == 0 && b == 0 && d == 0 = (0, 0, 0, c)
+            | a == 0 && c == 0 && d == 0 = (0, 0, 0, b)
+            | b == 0 && c == 0 && d == 0 = (0, 0, 0, a)
+            | a == 0 && b == 0 = (0, 0, c, d)
+            | a == 0 && c == 0 = (0, 0, b, d)
+            | a == 0 && d == 0 = (0, 0, b, c)
+            | b == 0 && c == 0 = (0, 0, a, d)
+            | b == 0 && d == 0 = (0, 0, a, c)
+            | c == 0 && d == 0 = (0, 0, a, b)
+            | b == 0 = (0, a, c, d)
+            | c == 0 = (0, a, b, d)
+            | d == 0 = (0, a, b, c)
             | otherwise = row
 
 rotateGridRight :: Grid a -> Grid a
