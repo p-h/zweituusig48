@@ -1,0 +1,51 @@
+name:       zweituusig48
+version:    0.1.0.0
+github:     "p-h/zweituusig48"
+license:    GPL3
+author:     "Philippe Hürlimann"
+maintainer: "p@hurlimann.org"
+copyright:  "2019 Philippe Hürlimann"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+synopsis:    2048 Implementation using GTK3
+category:    Games
+description: Please see the README on GitHub at <https://github.com/p-h/zweituusig48#readme>
+
+dependencies:
+- base
+- gi-gdk
+- gi-gtk
+- haskell-gi-base
+- reactive-banana
+- text
+- time
+
+library:
+  source-dirs: src
+
+executables:
+  zweituusig48-exe:
+    main:           Main.hs
+    source-dirs:    app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - zweituusig48
+
+tests:
+  zweituusig48-test:
+    main:            Spec.hs
+    source-dirs:     test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - zweituusig48
+      - hspec
+      - QuickCheck
