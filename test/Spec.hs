@@ -196,13 +196,13 @@ main = hspec $ do
                 ,(1, 1, 1, 1))
 
         it "is the inverse of rotateGridRight" $ property $
-            \x -> (x :: Grid Int) == (rotateGridLeft $ rotateGridRight x)
+            \x -> (x :: Grid Int) == rotateGridLeft (rotateGridRight x)
 
     describe "Lib.reverse'" $ do
         it "reverses 4-tuples" $ do
             reverse' (1, 2, 3, 4) `shouldBe` (4, 3, 2, 1)
         it "is its own inverse function" $ property $ 
-            \x -> (x :: Row Int) == (reverse' $ reverse' x)
+            \x -> (x :: Row Int) == reverse' (reverse' x)
 
     describe "Lib.reverseColumns'" $ do
         it "reverses the columns in a Grid" $ do
@@ -210,4 +210,4 @@ main = hspec $ do
                 `shouldBe` 
                 ((4, 3, 2, 1), (8, 7, 6, 5), (12, 11, 10, 9), (16, 15, 14, 13))
         it "is its own inverse function" $ property $ 
-            \x -> (x :: Row Int) == (reverse' $ reverse' x)
+            \x -> (x :: Row Int) == reverse' (reverse' x)
