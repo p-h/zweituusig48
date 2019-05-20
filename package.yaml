@@ -19,6 +19,7 @@ dependencies:
 - gi-gdk
 - gi-gtk
 - haskell-gi-base
+- random
 - reactive-banana
 - text
 - tuple
