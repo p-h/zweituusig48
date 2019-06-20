@@ -22,7 +22,7 @@ dependencies:
 - random
 - reactive-banana
 - text
-- tuple
+- lens
 
 library:
   source-dirs: src
