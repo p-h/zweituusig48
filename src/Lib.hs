@@ -64,6 +64,7 @@ keyCodeToDirection keycode = lookup keycode bindings
 
 someFunc :: IO ()
 someFunc = do
+    random <- R.getStdGen
     Gtk.init Nothing
     window <- new Gtk.ApplicationWindow
         [ #title := "Reactive banana and gtk test"
@@ -96,8 +97,7 @@ someFunc = do
             eKey <- B.fromAddHandler keyEvent
             let eDir        = B.filterJust $ fmap keyCodeToDirection eKey
             let eGridChange = fmap updateGrid eDir
-            let eGridChangeAndUpdate =
-                    ((extendGrid $ R.mkStdGen 0) .) <$> eGridChange
+            let eGridChangeAndUpdate = (extendGrid random .) <$> eGridChange
             eGrid <- B.accumE initialGrid eGridChangeAndUpdate
             B.reactimate $ (`displayGrid` labels) <$> eGrid
     network <- B.compile networkDescription
